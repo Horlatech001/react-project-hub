@@ -1,3 +1,4 @@
+/* Navbar */
 .navbar {
   background-color: #777777;
 }
@@ -5,19 +6,133 @@
 .navbar-brand {
   color: #f8f8f8;
 }
-.hero{
+/* Home */
+.hero {
   height: auto;
   margin: auto;
   margin-top: 50px;
   text-align: center;
 }
-.hero-text{
+.hero-text {
   font-weight: bold;
 }
-.hero-img{
+.hero-img {
   width: 90%;
   margin-top: 50px;
 }
-.topic-link{
+.topic-link {
   text-decoration: none;
+}
+.project-btn {
+  background-color: #777777;
+  color: #f8f8f8;
+  border: none;
+}
+/* Project */
+.topic-name {
+  font-size: 18px;
+  text-transform: uppercase;
+  font-weight: bold;
+  text-decoration: none;
+}
+.search-project{
+  margin-right: 10px;
+  outline: none;
+}
+/* Footer */
+.footer {
+  background-color: #191919;
+  color: white;
+}
+.footer-title {
+  text-transform: uppercase;
+  font-size: 16px;
+}
+.footer-col {
+  border-right: 1px solid #f8f8f8;
+}
+.footer-list > li > a {
+  color: #f8f8f8;
+  text-decoration: none;
+}
+.footer-list > li {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #f8f8f8;
+  list-style: square;
+}
+.footer-list > li::marker {
+  color: #777777;
+}
+/* Payment */
+.payment-list > li {
+  font-size: 18px;
+  margin-left: 25px;
+}
+.accord-bg{
+  background-color: #ebe9eb;
+  height: auto;
+  padding: 50px 20px;
+  margin-top: 50px;
+  border-radius: 15px;
+}
+.accordion-body{
+  background-color: #dfdcde;
+}
+.accordion-header{
+  background-color: #ebe9eb !important;
+}
+.accord-img{
+  float: right;
+  margin-bottom: 30px;
+}
+.accord-btn{
+  display: flex;
+  justify-content: end;
+  margin-top: 30px;
+}
+/* Checkout */
+.checkout-header{
+  margin-top: 50px;
+  padding: 20px 0;
+  color: #777777;
+  border-top: 1px solid #ebe9eb;
+  border-bottom: 1px solid #ebe9eb;
+}
+.checkout-name{
+  color: #777777;
+  margin-top: 30px;
+  background-color: #ebe9eb;
+  padding: 10px 5px;
+}
+.project-name{
+  color: #777777;
+  margin-top: 30px;
+}
+/* Contact */
+.contact > hr {
+  border: 1px solid #777777;
+}
+/* Login */
+.login-card{
+  border-radius: 10px;
+}
+/* media query */
+@media (max-width: 768px) {
+  .footer-col {
+    border-right: none;
+  }
+}
+@media (max-width: 480px) {
+  .footer-col {
+    border-right: none;
+  }
+  .hero,
+  .works,
+  .topic-table,
+  .list-title {
+    padding: 0 30px;
+  }
+  .hero-text {
+    font-size: 20px;
+  }
 }
