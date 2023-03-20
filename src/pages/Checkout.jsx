@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { PaystackButton } from "react-paystack";
+import { auth, db } from '../FIREBASE_CONFIG'
 import Pay from "../images/pay.png";
 import { useParams } from "react-router-dom";
-import { useNavigate } from 'react-router-dom';
+import { onAuthStateChanged, createUserWithEmailAndPassword } from 'firebase/auth'
+import { collection, addDoc } from "firebase/firestore";
 
 
 const Checkout = ({ getProjects, projects }) => {
@@ -15,29 +17,64 @@ const Checkout = ({ getProjects, projects }) => {
 
   const [projectName, setprojectName] = useState("");
 
-
   useEffect(() => {
     setprojectName(path.projectName.replaceAll("-", " "));
-
   }, [path, projectName, projects]);
 
-  const publicKey = "pk_test_9b2dc261dc817d12bb063212e10542e3d078d23f";
-  const amount = 300000;
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [authUser, setAuthUser] = useState(null);
+  const [isChecked, setIsChecked] = useState(false);
 
-  const resetForm = () => {
-    setFirstName('');
-    setLastName('');
-    setPhone('');
-    setEmail('');
-    setAddress('');
-    setPassword('');
-  };
+  const publicKey = "pk_test_9b2dc261dc817d12bb063212e10542e3d078d23f";
+  const amount = 300000;
+  // const email = authUser?.email;
+
+  const handleSuccess = async () => {
+    alert("Success payment received");
+    // create user account
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+      const user = res.user;
+      await addDoc(collection(db, "users"), {
+        uid: user.uid,
+        firstname,
+        lastname,
+        address,
+        phone,
+        authProvider: "local",
+        email,
+      });
+      console.log(user);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  const handleClose = () => {
+    alert("Payment not completed");
+  }
+
+  const toggleCheckbox = () => {
+    setIsChecked(!isChecked);
+  }
+
+  useEffect(() => {
+    const listen = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setAuthUser(user)
+      } else {
+        setAuthUser(null)
+      }
+    });
+    return () => {
+      listen();
+    }
+  }, [])
 
   const componentProps = {
     email,
@@ -50,50 +87,15 @@ const Checkout = ({ getProjects, projects }) => {
     },
     publicKey,
     text: 'Place Order',
-    onSuccess: ({ reference }) => {
-      alert(
-        `Your purchase was successful! Transaction reference: ${reference}`
-      );
-      resetForm();
-    },
-    onClose: () => alert("Oops! Transaction not completed"),
+    onSuccess: handleSuccess,
+    onClose: handleClose,
+    // onSuccess: ({ reference }) => {
+    //   alert(
+    //     `Your purchase was successful! Transaction reference: ${reference}`
+    //   );
+    // },
+    // onClose: () => alert("Oops! Transaction not completed"),
   };
-
-  // const countryAPI = () => {
-  //   const xhttp = new XMLHttpRequest();
-  //   const select = document.getElementById("countries");
-
-  //   let countries;
-
-  //   xhttp.onreadystatechange = function () {
-  //     console.log('this.status', this.status);
-  //     if (this.readyState == 4 && this.status == 200) {
-  //       countries = JSON.parse(xhttp.responseText);
-  //       assignValues();
-  //     }
-  //   };
-  //   xhttp.open("GET", "https://restcountries.com/v3.1/all", true);
-  //   xhttp.send();
-
-  //   function assignValues() {
-  //     countries.forEach(country => {
-  //       const option = document.createElement("option");
-  //       console.log('country', country)
-  //       option.value = country.cioc;
-  //       option.textContent = country.name.common;
-  //       select.appendChild(option);
-  //     });
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   countryAPI();
-  // }, []);
-
-  const navigate = useNavigate()
-  const token = localStorage.getItem('token')
-
-  if (!token) navigate('/login')
 
   return (
     <>
@@ -110,12 +112,6 @@ const Checkout = ({ getProjects, projects }) => {
               <input type="text" className="form-control" id="inputLastName" placeholder="Lastname" value={lastName}
                 onChange={(e) => setLastName(e.target.value)} />
             </div>
-            {/* <div className="col-sm-10">
-              <label htmlFor="inputCountry" className="col-sm-2 col-form-label">Country/Region</label>
-              <select class="countries" name="countries" id="countries" className='form-control'>
-                <option>Select your country</option>
-              </select>
-            </div> */}
             <div className="col-sm-10">
               <label htmlFor="inputAddress" className="col-sm-2 col-form-label">Address</label>
               <input type="text" className="form-control" id="Address" placeholder="Address" value={address}
@@ -132,16 +128,16 @@ const Checkout = ({ getProjects, projects }) => {
                 onChange={(e) => setEmail(e.target.value)} />
             </div>
             <div className="col-sm-10">
-              <div class="form-check form-switch mt-3">
-                <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" />
-                <label class="form-check-label" for="flexSwitchCheckChecked">Create an Account?</label>
+              <div className="form-check form-switch mt-3">
+                <label className="form-check-label" for="flexSwitchCheckChecked">Create an Account?</label>
+                <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked={isChecked} onChange={toggleCheckbox} />
               </div>
             </div>
-            <div className="col-sm-10 hide-col">
+            {isChecked && <div className="col-sm-10 hide-col">
               <label htmlFor="inputPassword" className="col-sm-2 col-form-label">Password</label>
               <input type="password" className="form-control" id="inputPassword" placeholder="Password" value={password}
                 onChange={(e) => setPassword(e.target.value)} />
-            </div>
+            </div>}
           </div>
         </form>
       </div>

@@ -116,6 +116,16 @@
 .login-card{
   border-radius: 10px;
 }
+.password-wrapper{
+  position: relative;
+}
+.password-wrapper span{
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
 /* media query */
 @media (max-width: 768px) {
   .footer-col {

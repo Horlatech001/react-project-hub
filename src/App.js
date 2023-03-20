@@ -15,19 +15,14 @@ import Register from "./pages/Register";
 import { collection, getDocs, query } from "firebase/firestore";
 import { db } from "./FIREBASE_CONFIG";
 import { useEffect, useState } from "react";
-// import Dashboard from "./pages/Dashboard";
 
 function App() {
   const [projects, setProjects] = useState([]);
-
-  // const userToken = localStorage.getItem("token");
-  // console.log(userToken);
 
   const getProjects = async () => {
     try {
       const docRef = query(collection(db, "posts"));
       const docSnap = await getDocs(docRef);
-      // console.log(docSnap);
 
       if (!docSnap.empty) {
         let d = docSnap.docs.map(
@@ -37,7 +32,7 @@ function App() {
         setProjects(d);
       } else {
         // doc.data() will be undefined in this case
-        console.log("No such document!");
+        // console.log("No such document!");
       }
     } catch (error) {
       console.log(error);
@@ -83,7 +78,6 @@ function App() {
         />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        {/* <Route path="/dashboard" element={<Dashboard />} /> */}
       </Routes>
     </>
   );

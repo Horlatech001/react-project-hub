@@ -15,7 +15,6 @@ const Categories = ({ getProjects, projects }) => {
 
     if (projects != null || projects != undefined) {
       projects.filter((pro) => {
-        // console.log(pro.category.stringValue);
         cats.push(pro.category.stringValue);
         console.log(cats);
         let uniqueCats = [...new Set(cats)]
