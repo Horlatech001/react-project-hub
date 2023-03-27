@@ -5,10 +5,7 @@ import { collection, addDoc } from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
 import { Button, Spinner } from 'react-bootstrap';
 
-
-
 const Register = () => {
-
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [firstName, setFirstName] = useState("");
@@ -29,18 +26,19 @@ const Register = () => {
         setLoading(true);
         try {
             const res = await createUserWithEmailAndPassword(auth, email, password);
-            const user = res.user;
+            console.log(res);
+            const userCredential = res.user;
             await addDoc(collection(db, "users"), {
-                uid: user.uid,
+                uid: userCredential.uid,
                 firstname,
                 lastname,
                 address,
                 phone,
                 authProvider: "local",
                 email,
+                password,
             });
-            console.log(user);
-            { user?.uid && navigate("/") }
+            { userCredential?.uid && navigate("/") }
         } catch (err) {
             console.error(err);
         }
@@ -88,7 +86,6 @@ const Register = () => {
                             </div>
                         </div>
                         <div className="col-sm-10 offset-sm-1 mt-3">
-                            {/* <button className='btn btn-primary' type="submit" onClick={()=>registerWithEmailAndPassword(firstName, lastName, address, phone, email, password)}>Register</button> */}
                             <Button variant='primary' onClick={() => registerWithEmailAndPassword(firstName, lastName, address, phone, email, password)} disabled={isLoading}>
                                 {isLoading ? <Spinner animation='border' size='sm' /> : "Register"}
                             </Button>

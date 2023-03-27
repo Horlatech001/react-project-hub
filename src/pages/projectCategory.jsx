@@ -11,7 +11,6 @@ const ProjectCategory = ({ getProjects, projects }) => {
   const path = useParams();
   // const params = location.pathname.split("/")[2];
   const [catName, setCatName] = useState("");
-
   const [matchedProj, setmatchedProj] = useState([]);
 
   useEffect(() => {
@@ -19,13 +18,11 @@ const ProjectCategory = ({ getProjects, projects }) => {
     setCatName(path.catName.replaceAll("-", " "));
 
     const responseProj = [];
-
     projects.filter((element) => {
       if (element.category.stringValue.trim().toLowerCase() === catName.trim().toLowerCase()) {
         responseProj.push(element);
       }
     });
-
     setmatchedProj(responseProj);
   }, [path, catName]);
 

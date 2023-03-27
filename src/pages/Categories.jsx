@@ -5,14 +5,13 @@ import Footer from "../component/Footer";
 const Categories = ({ getProjects, projects }) => {
 
   const [availableCategory, setAvailableCategory] = useState([]);
-
+  
   useEffect(() => {
     getProjects();
   }, []);
 
   useEffect(() => {
     let cats = [];
-
     if (projects != null || projects != undefined) {
       projects.filter((pro) => {
         cats.push(pro.category.stringValue);

@@ -27,6 +27,7 @@ const Login = () => {
                 .then((userCredential) => {
                     console.log(userCredential);
                     { userCredential.user.uid && navigate("/") }
+                    { userCredential.user.uid && setLoading(false) }
                 })
                 .catch((error) => {
                     let errorCode = error.code;
@@ -46,9 +47,9 @@ const Login = () => {
                     setShowAlert(true);
                 });
 
-            setTimeout(() => {
-                setLoading(false);
-            }, 2000)
+            // setTimeout(() => {
+            //     setLoading(false);
+            // }, 2000)
         }
     }
 

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { PaystackButton } from "react-paystack";
 import { auth, db } from '../FIREBASE_CONFIG'
+import { collection, addDoc } from "firebase/firestore";
 import Pay from "../images/pay.png";
 import { useParams } from "react-router-dom";
 import { onAuthStateChanged, createUserWithEmailAndPassword } from 'firebase/auth'
-import { collection, addDoc } from "firebase/firestore";
+
 
 
 const Checkout = ({ getProjects, projects }) => {
@@ -25,38 +26,47 @@ const Checkout = ({ getProjects, projects }) => {
   const [lastName, setLastName] = useState('');
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
+  let [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [authUser, setAuthUser] = useState(null);
   const [isChecked, setIsChecked] = useState(false);
 
   const publicKey = "pk_test_9b2dc261dc817d12bb063212e10542e3d078d23f";
   const amount = 300000;
-  // const email = authUser?.email;
 
-  const handleSuccess = async () => {
-    alert("Success payment received");
+  if(authUser){
+    email = authUser?.email
+  }
+
+  const handleSuccess = async (firstname,
+    lastname,
+    address,
+    phone,
+    email,
+    password) => {
+    console.log("Payment made successfully!");
     // create user account
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
-      const user = res.user;
+      console.log(res);
+      const userCredential = res.user;
       await addDoc(collection(db, "users"), {
-        uid: user.uid,
+        uid: userCredential.uid,
         firstname,
         lastname,
         address,
         phone,
         authProvider: "local",
         email,
+        password,
       });
-      console.log(user);
     } catch (err) {
       console.error(err);
     }
   }
 
   const handleClose = () => {
-    alert("Payment not completed");
+    alert("Oops! Payment not completed");
   }
 
   const toggleCheckbox = () => {
@@ -79,22 +89,9 @@ const Checkout = ({ getProjects, projects }) => {
   const componentProps = {
     email,
     amount,
-    metadata: {
-      firstName,
-      lastName,
-      phone,
-      address
-    },
     publicKey,
     text: 'Place Order',
-    onSuccess: handleSuccess,
     onClose: handleClose,
-    // onSuccess: ({ reference }) => {
-    //   alert(
-    //     `Your purchase was successful! Transaction reference: ${reference}`
-    //   );
-    // },
-    // onClose: () => alert("Oops! Transaction not completed"),
   };
 
   return (
@@ -129,7 +126,7 @@ const Checkout = ({ getProjects, projects }) => {
             </div>
             <div className="col-sm-10">
               <div className="form-check form-switch mt-3">
-                <label className="form-check-label" for="flexSwitchCheckChecked">Create an Account?</label>
+                <label className="form-check-label" htmlFor="flexSwitchCheckChecked">Create an Account?</label>
                 <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked={isChecked} onChange={toggleCheckbox} />
               </div>
             </div>
@@ -172,7 +169,7 @@ const Checkout = ({ getProjects, projects }) => {
           </div>
         </div>
         <div className='accord-btn'>
-          <PaystackButton className="paystack-button btn btn-primary rounded-4" {...componentProps} />
+          <PaystackButton className="paystack-button btn btn-primary rounded-4" {...componentProps} onSuccess={() => handleSuccess(firstName, lastName, address, phone, email, password)} />
         </div>
       </div>
     </>

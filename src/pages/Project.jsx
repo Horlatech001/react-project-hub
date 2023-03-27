@@ -11,7 +11,6 @@ const Project = ({ getProjects, projects }) => {
   const path = useParams();
 
   const [projectName, setprojectName] = useState("");
-
   const [matchedProj, setMatchedProj] = useState({});
 
   useEffect(() => {
@@ -23,15 +22,10 @@ const Project = ({ getProjects, projects }) => {
       if (element.name.stringValue.trim().toLowerCase() === projectName.trim().toLowerCase()) {
         responseProj = element;
       }
-      console.log(element);
+      // console.log(element);
     });
-
     setMatchedProj(responseProj);
-
   }, [path, projectName, projects]);
-
-
-
 
   return (
     <>
@@ -43,7 +37,7 @@ const Project = ({ getProjects, projects }) => {
             </div>
           </div>
           <div className="row mt-4">
-            <div className="col-lg-9" style={{ borderRight: "1px solid grey", borderTop: "1px solid grey", }}>
+            <div className="col-lg-9 side-project">
               <div>
                 <p className="mt-4" style={{ fontSize: 14 }}>
                   Download the complete Accounting project topic and material
@@ -73,16 +67,13 @@ const Project = ({ getProjects, projects }) => {
                 abbreviations and chapter one. Click the DOWNLOAD NOW button to
                 get the complete project work instantly.
               </p>
-
               <p>#3,000.00</p>
               <Link to={`/checkout/${projectName.replaceAll(" ", "-")}/`}>
-                <button className="btn btn-primary rounded-4">Buy now</button>
+                <button className="btn btn-primary rounded-4 buy-btn">Buy now</button>
               </Link>
-
             </div>
           </div>
         </div>
-
       </div>
       <Footer />
     </>

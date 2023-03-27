@@ -39,6 +39,13 @@
   margin-right: 10px;
   outline: none;
 }
+.buy-btn{
+  margin-bottom: 15px;
+}
+.side-project{
+  border-right: 1px solid grey;
+  border-top: 1px solid grey;
+}
 /* Footer */
 .footer {
   background-color: #191919;
@@ -144,5 +151,8 @@
   }
   .hero-text {
     font-size: 20px;
+  }
+  .side-project{
+    border: none;
   }
 }
